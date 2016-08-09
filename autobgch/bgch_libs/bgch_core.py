@@ -108,7 +108,7 @@ class BgChCore:
 
     def __rand_picpath(self):
         def __is_played(targetImage, totalCount):
-            if len(self.__prev_imgs) >= totalCount:
+            if len(self.__prev_imgs) >= totalCount - 1:
                 self.__prev_imgs = []
             return targetImage in self.__prev_imgs
 
