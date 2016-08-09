@@ -107,6 +107,11 @@ class BgChCore:
             self.__playing_cv.wait()
 
     def __rand_picpath(self):
+        def __is_played(targetImage, totalCount):
+            if len(self.__prev_imgs) >= totalCount:
+                self.__prev_imgs = []
+            return targetImage in self.__prev_imgs
+
         allimgs = []
         for (root, subFolders, filenames) in os.walk(self.__bg_dir, followlinks=True):
             allimgs += list(filter(is_image, map(lambda arg: os.path.join(root, \
@@ -118,7 +123,7 @@ class BgChCore:
             else:
                 random.shuffle(allimgs)
                 for img in allimgs:
-                    if img != self.__cur_img:
+                    if img != self.__cur_img and not __is_played(img, len(allimgs)):
                         return img
         else:
             raise FileNotFoundError('No image found')
@@ -151,8 +156,6 @@ class BgChCore:
     def __add_to_prev_img(self, img):
         if img == '':
             return
-        if len(self.__prev_imgs) >= self.__max_prev_img_num:
-            del self.__prev_imgs[0:1]
         self.__prev_imgs.append(img)
 
     def __build_func_map(self):
